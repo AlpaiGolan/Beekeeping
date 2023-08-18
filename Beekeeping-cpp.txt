@@ -1,0 +1,26 @@
+# Beekeeping
+Beekeeping Embedded System
+#include <iostream>
+#include <wiringPi.h>
+// Assuming you have a DHT library for the Pi.
+#include "DHT.h"
+#include "HX711.h"
+
+int main() {
+    wiringPiSetup();
+    DHT dht(DHTPIN, DHTTYPE);
+    HX711 scale(HX711_DAT, HX711_SCK);
+
+    while (true) {
+        float temp = dht.readTemperature();
+        float humidity = dht.readHumidity();
+        float weight = scale.get_units(5);
+
+        std::cout << "Temperature: " << temp << " C" << std::endl;
+        std::cout << "Humidity: " << humidity << " %" << std::endl;
+        std::cout << "Weight: " << weight << " kg" << std::endl;
+
+        delay(1000);
+    }
+    return 0;
+}

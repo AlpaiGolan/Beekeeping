@@ -1,0 +1,30 @@
+#include <DHT.h>
+#include <Wire.h>
+
+#define DHTPIN 2
+#define DHTTYPE DHT22
+#define HX711_SCK  3
+#define HX711_DAT  4
+
+DHT dht(DHTPIN, DHTTYPE);
+HX711 scale;
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+  scale.begin(HX711_DAT, HX711_SCK);
+  scale.set_scale();
+  scale.tare();
+}
+
+void loop() {
+  float temp = dht.readTemperature();
+  float humidity = dht.readHumidity();
+  float weight = scale.get_units(5);  // get the weight from the scale
+  
+  Serial.print("Temperature: "); Serial.print(temp); Serial.println(" C");
+  Serial.print("Humidity: "); Serial.print(humidity); Serial.println(" %");
+  Serial.print("Weight: "); Serial.print(weight); Serial.println(" kg");
+  
+  delay(1000);
+}
